@@ -14,10 +14,11 @@ def search_by_title(title):
 def search_by_date(date):
     try:
         new_date = datetime.fromisoformat(date).strftime("%d/%m/%Y")
-        query = {"timestamp": {"$eq": new_date}}
+        query = {"timestamp": {"$regex": new_date}}
         news = search_news(query)
+        list = [(new["title"], new["url"]) for new in news]
 
-        return [(new["title"], new["url"]) for new in news]
+        return list
 
     except ValueError:
         raise ValueError("Data inválida")
@@ -25,9 +26,17 @@ def search_by_date(date):
 
 # Requisito 8
 def search_by_tag(tag):
-    """Seu código deve vir aqui"""
+    query = {"tags": {"$regex": tag, "$options": "i"}}
+    news = search_news(query)
+    list = [(new["title"], new["url"]) for new in news]
+
+    return list
 
 
 # Requisito 9
 def search_by_category(category):
-    """Seu código deve vir aqui"""
+    query = {"category": {"$regex": category, "$options": "i"}}
+    news = search_news(query)
+    list = [(new["title"], new["url"]) for new in news]
+
+    return list
