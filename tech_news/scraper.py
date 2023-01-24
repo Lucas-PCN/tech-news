@@ -1,5 +1,6 @@
 import requests
 from time import sleep
+from parsel import Selector
 
 
 # Requisito 1
@@ -12,17 +13,19 @@ def fetch(url):
             timeout=3,
         )
 
-        if response.status_code == 200:
-            return response.text
+        if response.status_code != 200:
+            return None
 
-        return None
+        return response.text
     except requests.Timeout:
         return None
 
 
 # Requisito 2
 def scrape_updates(html_content):
-    """Seu código deve vir aqui"""
+    selector = Selector(text=html_content)
+    hrefs_list = selector.css(".cs-overlay-link::attr(href)").getall()
+    return hrefs_list
 
 
 # Requisito 3
